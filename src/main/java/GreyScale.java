@@ -13,9 +13,10 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-public class GreyScale {
-    public static void main(String[] args) {
 
+public class GreyScale {
+
+    public static void main(String[] args) {
         try {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
