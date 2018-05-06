@@ -27,9 +27,9 @@ public class GreyScale {
         try {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-            Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPEG");
-            while (readers.hasNext()) {
-                System.out.println("reader: " + readers.next());
+            Iterator<ImageReader> readersTest = ImageIO.getImageReadersByFormatName("JPEG");
+            while (readersTest.hasNext()) {
+                System.out.println("reader: " + readersTest.next());
             }
 
             File folder = new File(args[0]);
