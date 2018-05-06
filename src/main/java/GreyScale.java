@@ -31,33 +31,30 @@ public class GreyScale {
             for (File file : listOfFiles) {
                 if (file.isFile()) {
                     File input = file;
-                    System.out.println(input.getName());
-
                     BufferedImage image = ImageIO.read(input);
 
                     if (input == null){
                         System.out.println("input null");
                     }
 
-                    if (image == null){
-                        System.out.println("image null");
+                    if (image != null){
+                        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+                        Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+                        mat.put(0, 0, data);
+
+                        Mat mat1 = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
+                        Imgproc.cvtColor(mat, mat1, Imgproc.COLOR_RGB2GRAY);
+
+                        byte[] data1 = new byte[mat1.rows() * mat1.cols() * (int) (mat1.elemSize())];
+                        mat1.get(0, 0, data1);
+                        BufferedImage image1 = new BufferedImage(mat1.cols(), mat1.rows(), BufferedImage.TYPE_BYTE_GRAY);
+                        image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);
+
+
+                        File ouptut = new File(dir +  "/grayscale_" + file.getName());
+                        ImageIO.write(image1, "jpg", ouptut);
                     }
 
-                    byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-                    Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
-                    mat.put(0, 0, data);
-
-                    Mat mat1 = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
-                    Imgproc.cvtColor(mat, mat1, Imgproc.COLOR_RGB2GRAY);
-
-                    byte[] data1 = new byte[mat1.rows() * mat1.cols() * (int) (mat1.elemSize())];
-                    mat1.get(0, 0, data1);
-                    BufferedImage image1 = new BufferedImage(mat1.cols(), mat1.rows(), BufferedImage.TYPE_BYTE_GRAY);
-                    image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);
-
-
-                    File ouptut = new File(dir +  "/grayscale_" + file.getName());
-                    ImageIO.write(image1, "jpg", ouptut);
                 }
             }
 
