@@ -8,7 +8,6 @@ import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -27,7 +26,7 @@ public class GreyScale {
             File[] listOfFiles = folder.listFiles();
             File dir = new File(args[1]);
 
-            if(!dir.exists()){
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
 
@@ -37,11 +36,13 @@ public class GreyScale {
                     File input = file;
                     BufferedImage image = ImageIO.read(input);
 
-                    if (input == null){
+                    System.out.println(image.getClass().getName());
+
+                    if (input == null) {
                         System.out.println("input null");
                     }
 
-                    if (image != null){
+                    if (image != null) {
                         byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
                         Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
                         mat.put(0, 0, data);
@@ -55,20 +56,18 @@ public class GreyScale {
                         image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);
 
 
-                        File ouptut = new File(dir +  "/grayscale_" + file.getName());
+                        File ouptut = new File(dir + "/grayscale_" + file.getName());
                         ImageIO.write(image1, "jpg", ouptut);
-                    } else{
+                    } else {
                         nullImages.add(file.getName());
                     }
                 }
             }
 
-            for (String item: nullImages
-                 ) {
+            for (String item : nullImages
+                    ) {
                 System.out.println(item);
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
