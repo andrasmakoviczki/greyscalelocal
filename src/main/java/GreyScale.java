@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import org.opencv.core.Core;
@@ -28,6 +30,7 @@ public class GreyScale {
                 dir.mkdirs();
             }
 
+            ArrayList<String> nullImages = new ArrayList<String>();
             for (File file : listOfFiles) {
                 if (file.isFile()) {
                     File input = file;
@@ -53,9 +56,15 @@ public class GreyScale {
 
                         File ouptut = new File(dir +  "/grayscale_" + file.getName());
                         ImageIO.write(image1, "jpg", ouptut);
+                    } else{
+                        nullImages.add(file.getName());
                     }
-
                 }
+            }
+
+            for (String item: nullImages
+                 ) {
+                System.out.println(item);
             }
 
 
