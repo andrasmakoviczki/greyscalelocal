@@ -53,7 +53,7 @@ public class GreyScale {
 
 
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
