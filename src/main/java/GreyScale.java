@@ -31,6 +31,8 @@ public class GreyScale {
             for (File file : listOfFiles) {
                 if (file.isFile()) {
                     File input = file;
+                    System.out.println(input.getName());
+
                     BufferedImage image = ImageIO.read(input);
 
                     if (input == null){
