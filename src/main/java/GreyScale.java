@@ -33,6 +33,14 @@ public class GreyScale {
                     File input = file;
                     BufferedImage image = ImageIO.read(input);
 
+                    if (input == null){
+                        System.out.println("input null");
+                    }
+
+                    if (image == null){
+                        System.out.println("image null");
+                    }
+
                     byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
                     Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
                     mat.put(0, 0, data);
@@ -55,5 +63,7 @@ public class GreyScale {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 }
