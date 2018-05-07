@@ -70,21 +70,25 @@ public class GreyScale {
                     }
 
                     if (image != null) {
-                        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-                        Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
-                        mat.put(0, 0, data);
+                        try {
+                            byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+                            Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+                            mat.put(0, 0, data);
 
-                        Mat mat1 = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
-                        Imgproc.cvtColor(mat, mat1, Imgproc.COLOR_RGB2GRAY);
+                            Mat mat1 = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
+                            Imgproc.cvtColor(mat, mat1, Imgproc.COLOR_RGB2GRAY);
 
-                        byte[] data1 = new byte[mat1.rows() * mat1.cols() * (int) (mat1.elemSize())];
-                        mat1.get(0, 0, data1);
-                        BufferedImage image1 = new BufferedImage(mat1.cols(), mat1.rows(), BufferedImage.TYPE_BYTE_GRAY);
-                        image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);
+                            byte[] data1 = new byte[mat1.rows() * mat1.cols() * (int) (mat1.elemSize())];
+                            mat1.get(0, 0, data1);
+                            BufferedImage image1 = new BufferedImage(mat1.cols(), mat1.rows(), BufferedImage.TYPE_BYTE_GRAY);
+                            image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);
 
 
-                        File ouptut = new File(dir + "/grayscale_" + file.getName());
-                        ImageIO.write(image1, "jpg", ouptut);
+                            File ouptut = new File(dir + "/grayscale_" + file.getName());
+                            ImageIO.write(image1, "jpg", ouptut);
+                        } catch (UnsupportedOperationException e){
+                            System.out.println("UnsupportedOperationException");
+                        }
                     } else {
                         nullImages.add(file.getName());
                     }
