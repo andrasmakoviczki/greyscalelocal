@@ -27,11 +27,6 @@ public class GreyScale {
         try {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-            Iterator<ImageReader> readersTest = ImageIO.getImageReadersByFormatName("JPEG");
-            while (readersTest.hasNext()) {
-                System.out.println("reader: " + readersTest.next());
-            }
-
             File folder = new File(args[0]);
             File[] listOfFiles = folder.listFiles();
             File dir = new File(args[1]);
@@ -47,46 +42,28 @@ public class GreyScale {
 
                     // Create input stream
                     ImageInputStream inputIO = ImageIO.createImageInputStream(file);
+                    BufferedImage image = null;
 
                     try {
                         // Get the reader
                         Iterator<ImageReader> readers = ImageIO.getImageReaders(inputIO);
 
-                        if (!readers.hasNext()) {
-                            throw new IllegalArgumentException("No reader for: " + file);
+                        if (readers.hasNext()) {
+                            ImageReader reader = readers.next();
+                            try {
+                                reader.setInput(inputIO);
+                                ImageReadParam param = reader.getDefaultReadParam();
+                                image = reader.read(0, param);
+                                int numThumbs = reader.getNumThumbnails(0);
+                            } finally {
+                                // Dispose reader in finally block to avoid memory leaks
+                                reader.dispose();
+                            }
                         }
-
-                        ImageReader reader = readers.next();
-
-
-
-                        try {
-                            reader.setInput(inputIO);
-
-
-                            ImageReadParam param = reader.getDefaultReadParam();
-
-
-                            // Finally read the image, using settings from param
-                            BufferedImage image = reader.read(0, param);
-
-                            // Optionally, read thumbnails, meta data, etc...
-                            int numThumbs = reader.getNumThumbnails(0);
-                            // ...
-                        }
-                        finally {
-                            // Dispose reader in finally block to avoid memory leaks
-                            reader.dispose();
-                        }
-                    }
-                    finally {
+                    } finally {
                         // Close stream in finally block to avoid resource leaks
                         inputIO.close();
                     }
-
-                    BufferedImage image = ImageIO.read(input);
-
-                    System.out.println(image.getClass().getName());
 
                     if (input == null) {
                         System.out.println("input null");
