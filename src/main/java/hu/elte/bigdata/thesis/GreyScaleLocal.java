@@ -1,4 +1,4 @@
-/**
+package hu.elte.bigdata.thesis; /**
  * Created by AMakoviczki on 2018. 05. 05..
  */
 
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 
-public class GreyScale {
+public class GreyScaleLocal {
 
     public static void main(String[] args) {
         try {
@@ -78,9 +78,9 @@ public class GreyScale {
                             byte[] greyData = new byte[greyMat.rows() * greyMat.cols() * (int) (greyMat.elemSize())];
                             greyMat.get(0, 0, greyData);
 
+                            //Copy the image into greyscale image
                             BufferedImage greyImage = new BufferedImage(greyMat.cols(), greyMat.rows(), BufferedImage.TYPE_BYTE_GRAY);
                             greyImage.getRaster().setDataElements(0, 0, greyMat.cols(), greyMat.rows(), greyData);
-
 
                             //Write the greyscale images to target dir
                             File ouptut = new File(outputDir + "/grayscale_" + file.getName());
