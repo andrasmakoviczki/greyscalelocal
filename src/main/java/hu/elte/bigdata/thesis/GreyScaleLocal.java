@@ -1,6 +1,7 @@
-package hu.elte.bigdata.thesis; /**
+/**
  * Created by AMakoviczki on 2018. 05. 05..
  */
+package hu.elte.bigdata.thesis;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;

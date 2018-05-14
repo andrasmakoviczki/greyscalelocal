@@ -48,7 +48,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>Greyscale</mainClass>
+                                    <mainClass>hu.elte.bigdata.thesis.GreyScaleLocal</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
