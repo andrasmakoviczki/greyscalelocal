@@ -2,14 +2,6 @@
  * Created by AMakoviczki on 2018. 05. 05..
  */
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-
-import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -19,20 +11,28 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class GreyScale {
 
     public static void main(String[] args) {
         try {
+            //Load the native library for OpenCV
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-            File folder = new File(args[0]);
-            File[] listOfFiles = folder.listFiles();
-            File dir = new File(args[1]);
+            //Input directory
+            File inputDir = new File(args[0]);
+            File[] listOfFiles = inputDir.listFiles();
 
-            if (!dir.exists()) {
-                dir.mkdirs();
+            //Output directory
+            File outputDir = new File(args[1]);
+            if (!outputDir.exists()) {
+                outputDir.mkdirs();
             }
 
             ArrayList<String> nullImages = new ArrayList<String>();
@@ -54,40 +54,41 @@ public class GreyScale {
                                 reader.setInput(inputIO);
                                 ImageReadParam param = reader.getDefaultReadParam();
                                 image = reader.read(0, param);
-                                int numThumbs = reader.getNumThumbnails(0);
                             } finally {
-                                // Dispose reader in finally block to avoid memory leaks
+                                // Dispose reader
                                 reader.dispose();
                             }
                         }
                     } finally {
-                        // Close stream in finally block to avoid resource leaks
+                        // Close stream
                         inputIO.close();
-                    }
-
-                    if (input == null) {
-                        System.out.println("input null");
                     }
 
                     if (image != null) {
                         try {
+                            //Get the image file
                             byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
                             Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
                             mat.put(0, 0, data);
 
-                            Mat mat1 = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
-                            Imgproc.cvtColor(mat, mat1, Imgproc.COLOR_RGB2GRAY);
+                            //Init new greyscale image
+                            Mat greyMat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
+                            Imgproc.cvtColor(mat, greyMat, Imgproc.COLOR_RGB2GRAY);
 
-                            byte[] data1 = new byte[mat1.rows() * mat1.cols() * (int) (mat1.elemSize())];
-                            mat1.get(0, 0, data1);
-                            BufferedImage image1 = new BufferedImage(mat1.cols(), mat1.rows(), BufferedImage.TYPE_BYTE_GRAY);
-                            image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);
+                            byte[] greyData = new byte[greyMat.rows() * greyMat.cols() * (int) (greyMat.elemSize())];
+                            greyMat.get(0, 0, greyData);
+
+                            BufferedImage greyImage = new BufferedImage(greyMat.cols(), greyMat.rows(), BufferedImage.TYPE_BYTE_GRAY);
+                            greyImage.getRaster().setDataElements(0, 0, greyMat.cols(), greyMat.rows(), greyData);
 
 
-                            File ouptut = new File(dir + "/grayscale_" + file.getName());
-                            ImageIO.write(image1, "jpg", ouptut);
-                        } catch (UnsupportedOperationException e){
-                            System.out.println("UnsupportedOperationException");
+                            //Write the greyscale images to target dir
+                            File ouptut = new File(outputDir + "/grayscale_" + file.getName());
+                            ImageIO.write(greyImage, "jpg", ouptut);
+                        } catch (UnsupportedOperationException e) {
+
+                        } catch (NullPointerException e) {
+
                         }
                     } else {
                         nullImages.add(file.getName());
@@ -95,8 +96,8 @@ public class GreyScale {
                 }
             }
 
-            for (String item : nullImages
-                    ) {
+            //Check unsupported images
+            for (String item : nullImages) {
                 System.out.println(item);
             }
         } catch (Exception e) {
