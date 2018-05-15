@@ -83,7 +83,7 @@ public class GreyScaleLocal {
                             BufferedImage greyImage = new BufferedImage(greyMat.cols(), greyMat.rows(), BufferedImage.TYPE_BYTE_GRAY);
                             greyImage.getRaster().setDataElements(0, 0, greyMat.cols(), greyMat.rows(), greyData);
 
-                            //Write the greyscale images to target dir
+
                             File ouptut = new File(outputDir + "/grayscale_" + file.getName());
                             ImageIO.write(greyImage, "jpg", ouptut);
                         } catch (UnsupportedOperationException e) {
